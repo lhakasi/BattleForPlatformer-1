@@ -1,33 +1,44 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(EnemyWaypointMovement))]
 public class EnemyAnimator : MonoBehaviour
 {
     private const string Walk = nameof(Walk);
 
     private Animator _animator;
-    private EnemyWaypointMovement _waypointMovement;
+    private SpriteRenderer _spriteRenderer;
+    private Vector3 _previousPosition;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        _waypointMovement = GetComponent<EnemyWaypointMovement>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
 
-        _animator.SetBool(Walk, true);
+        _animator.Play(Walk);
     }
 
-    private void OnEnable() =>
-        _waypointMovement.MoveStateChanged += OnMoveStateChanged;
-
-    private void OnDisable() =>
-        _waypointMovement.MoveStateChanged -= OnMoveStateChanged;
-
-    private void OnMoveStateChanged(EnemyWaypointMovement.MoveStates states)
+    private void Start()
     {
-        if (states == EnemyWaypointMovement.MoveStates.Walk)
-            _animator.SetBool(Walk, true);
-        else
-            _animator.SetBool(Walk, false);
+        _previousPosition = transform.position;
+    }
+
+    private void Update()
+    {
+        FlipModel();
+    }
+
+    private void FlipModel()
+    {
+        Vector3 movement = transform.position - _previousPosition;
+
+        if (movement != Vector3.zero)
+        {
+            if (transform.position.x > _previousPosition.x)
+                _spriteRenderer.flipX = false;
+            else
+                _spriteRenderer.flipX = true;
+        }
+
+        _previousPosition = transform.position;
     }
 }

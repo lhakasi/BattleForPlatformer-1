@@ -1,30 +1,31 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class PlayerStateMachine : IStateSwitcher
+public class PlayerStateMachine : IPlayerStateSwitcher
 {
-    private List<IState> _states;
-    private IState _currentState;
+    private List<IPlayerState> _states;
+    private IPlayerState _currentState;
 
     public PlayerStateMachine(Player player)
     {
-        StateMachineData data = new StateMachineData();
+        PlayerStateMachineData data = new PlayerStateMachineData();
 
-        _states = new List<IState>()
+        _states = new List<IPlayerState>()
         {
             new IdlingState(this, data, player),
             new WalkingState(this, data, player),
             new JumpingState(this, data, player),
             new FallingState(this, data, player),
+            new AttackingState(this, data, player)
         };
 
         _currentState = _states[0];
         _currentState.Enter();
     }
 
-    public void SwitchState<State>() where State : IState
+    public void SwitchState<State>() where State : IPlayerState
     {
-        IState state = _states.FirstOrDefault(state => state is State);
+        IPlayerState state = _states.FirstOrDefault(state => state is State);
 
         _currentState.Exit();
         _currentState = state;

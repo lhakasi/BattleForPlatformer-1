@@ -2,7 +2,8 @@ using AnimationStates;
 
 public class IdlingState : GroundedState
 {
-    public IdlingState(IStateSwitcher stateSwitcher, StateMachineData data, Player player) : base(stateSwitcher, data, player)
+    public IdlingState(IPlayerStateSwitcher stateSwitcher, PlayerStateMachineData data, Player player) 
+        : base(stateSwitcher, data, player)
     {
     }
 
@@ -10,14 +11,12 @@ public class IdlingState : GroundedState
     {
         base.Enter();
 
-        //View.StartAnimation(States.Idle);
+        View.StartAnimation(States.Idle);
     }
 
     public override void Exit()
     {
         base.Exit();
-
-        //View.StopAnimation(States.Idle);
     }
 
     public override void Update()

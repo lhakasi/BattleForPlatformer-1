@@ -1,25 +1,20 @@
 using UnityEngine.InputSystem;
-using AnimationStates;
 
 public class GroundedState : MovementState
 {
     private GroundChecker _groundChecker;
 
-    public GroundedState(IStateSwitcher stateSwitcher, StateMachineData data, Player player) : base(stateSwitcher, data, player)
-        => _groundChecker = player.GroundChecker;
+    public GroundedState(IPlayerStateSwitcher stateSwitcher, PlayerStateMachineData data, Player player)
+        : base(stateSwitcher, data, player) => _groundChecker = player.GroundChecker;
 
     public override void Enter()
     {
         base.Enter();
-
-        //View.StartAnimation(States.Grounded);
     }
 
     public override void Exit()
     {
         base.Exit();
-
-        //View.StopAnimation(States.Grounded);
     }
 
     public override void Update()
@@ -35,6 +30,7 @@ public class GroundedState : MovementState
         base.AddInputActionsCallbacks();
 
         Input.Movement.Jump.performed += OnJumpKeyPressed;
+        Input.Movement.Attack.performed += OnAttackKeyPressed;
     }
 
     protected override void RemoveInputActionsCallback()
@@ -42,7 +38,9 @@ public class GroundedState : MovementState
         base.RemoveInputActionsCallback();
 
         Input.Movement.Jump.performed -= OnJumpKeyPressed;
+        Input.Movement.Attack.performed -= OnAttackKeyPressed;
     }
 
     private void OnJumpKeyPressed(InputAction.CallbackContext obj) => StateSwitcher.SwitchState<JumpingState>();
+    private void OnAttackKeyPressed(InputAction.CallbackContext obj) => StateSwitcher.SwitchState<AttackingState>();
 }

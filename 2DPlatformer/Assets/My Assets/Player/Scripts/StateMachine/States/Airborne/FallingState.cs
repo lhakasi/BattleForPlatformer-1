@@ -2,8 +2,8 @@ public class FallingState : AirborneState
 {
     private readonly GroundChecker _groundChecker;
 
-    public FallingState(IStateSwitcher stateSwitcher, StateMachineData data, Player player) : base(stateSwitcher, data, player)
-         => _groundChecker = player.GroundChecker;
+    public FallingState(IPlayerStateSwitcher stateSwitcher, PlayerStateMachineData data, Player player) 
+        : base(stateSwitcher, data, player) => _groundChecker = player.GroundChecker;
 
 
     public override void Enter()

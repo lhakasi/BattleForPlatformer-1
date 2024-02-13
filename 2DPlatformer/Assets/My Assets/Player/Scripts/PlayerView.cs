@@ -1,16 +1,31 @@
-using UnityEngine;
 using AnimationStates;
+using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
 public class PlayerView : MonoBehaviour
 {
-    private Animator _animator;
+    [SerializeField] private Animator _animator;
 
-    private void Awake() => _animator = GetComponent<Animator>();
+    private float _delayToCompleteAnimation;
 
-    //public void StartAnimation(States state) => _animator.SetBool(state.ToString(), true);
 
-    //public void StopAnimation(States state) => _animator.SetBool(state.ToString(), false);
+    public bool IsAnimationComplete;
+    private float AnimationFullLenght => _animator.GetCurrentAnimatorStateInfo(0).length;
+
+    public void StartAnimation(States state)
+    {
+        IsAnimationComplete = false;
+
+        _animator.Play(state.ToString());   
+        
+        _delayToCompleteAnimation = Time.time + AnimationFullLenght;
+    }
+
+    public void Update()
+    {
+        if (Time.time >= _delayToCompleteAnimation)
+            IsAnimationComplete = true;
+    }
 }
 
 namespace AnimationStates
@@ -21,7 +36,7 @@ namespace AnimationStates
         Walk,
         Jump,
         Attack,
-        Grounded,
-        Airborne
+        Hurt,
+        Die
     }
 }
